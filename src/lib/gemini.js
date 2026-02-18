@@ -19,4 +19,5 @@ try {
 
 export { ai };
 // Using Llama 3.3 70B for excellent reasoning and speed
-export const modelId = "llama-3.3-70b-versatile"; 
+export const modelId = "llama-3.3-70b-versatile";
+// pensando no que fazer da minha vida, estou ficando insanamente louco.

@@ -52,6 +52,7 @@ export async function POST(req) {
 
         const responseContent = completion.choices[0].message.content;
 
+        //apenas sim.
         let result;
         try {
             result = JSON.parse(responseContent);

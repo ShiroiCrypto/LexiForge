@@ -2,7 +2,7 @@
 
 **LexiForge** é uma aplicação web minimalista de **Oratória Generativa**. Inspirada na estética cyberpunk e na solemnidade dos clássicos, ela transforma uma única palavra em uma saga épica, forjada por Inteligência Artificial.
 
-![LexiForge Banner](/logo.png)
+![LexiForge Banner](https://imgur.com/MQpuez7.png)
 
 ## ✨ Funcionalidades (Zenith Edition)
 

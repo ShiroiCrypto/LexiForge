@@ -67,12 +67,12 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden bg-[#05070a]">
+    <main className="flex min-h-screen flex-col items-center relative overflow-hidden bg-[#05070a]">
       {/* Zenith Noise & Ambience */}
       <div className="bg-noise"></div>
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_10%,_var(--tw-gradient-stops))] from-[#0a1a2f] via-[#05070a] to-[#05070a]"></div>
 
-      <div className="z-10 w-full max-w-3xl flex flex-col items-center gap-12 font-sans">
+      <div className="z-10 w-full max-w-3xl flex flex-col items-center justify-center flex-grow gap-12 font-sans py-12 px-6">
 
         {/* Header / Logo Area */}
         <motion.div
@@ -229,7 +229,7 @@ export default function Home() {
       </div>
 
       {/* Footer / Credits */}
-      <footer className="absolute bottom-6 text-center w-full z-20 opacity-40 hover:opacity-100 transition-opacity duration-500">
+      <footer className="w-full text-center py-6 z-20 opacity-40 hover:opacity-100 transition-opacity duration-500 mt-auto">
         <a
           href="https://github.com/ShiroiCrypto"
           target="_blank"

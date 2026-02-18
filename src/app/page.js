@@ -11,6 +11,22 @@ export default function Home() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
+  // Logo "Shadow Emergence"
+  const logoVariants = {
+    hidden: { opacity: 0, scale: 0.9, filter: "blur(8px)" },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { duration: 1.2, ease: "easeOut" }
+    },
+    forging: {
+      scale: [1, 1.02, 1],
+      filter: ["drop-shadow(0 0 0px #00F5FF)", "drop-shadow(0 0 8px #00F5FF)", "drop-shadow(0 0 0px #00F5FF)"],
+      transition: { repeat: Infinity, duration: 2.5, ease: "easeInOut" }
+    }
+  };
+
   const handleForge = async (e) => {
     e.preventDefault();
     if (!inputWord.trim()) return;
@@ -51,67 +67,54 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-24 relative overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-[#0B0E14] to-[#0B0E14]"></div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden bg-[#05070a]">
+      {/* Zenith Noise & Ambience */}
+      <div className="bg-noise"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_10%,_var(--tw-gradient-stops))] from-[#0a1a2f] via-[#05070a] to-[#05070a]"></div>
 
       <div className="z-10 w-full max-w-3xl flex flex-col items-center gap-12 font-sans">
 
         {/* Header / Logo Area */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="flex flex-col items-center gap-4 text-center"
+          initial="hidden"
+          animate={loading ? "forging" : "visible"}
+          variants={logoVariants}
+          className="relative w-32 h-32 md:w-48 md:h-48 opacity-90 hover:opacity-100 transition-opacity duration-500"
         >
-          <motion.div
-            className="relative w-32 h-32 md:w-48 md:h-48 mb-4"
-            animate={loading ? { scale: [1, 1.05, 1], opacity: [1, 0.8, 1] } : {}}
-            transition={loading ? { repeat: Infinity, duration: 2, ease: "easeInOut" } : {}}
-          >
-            <Image
-              src="/logo.png"
-              alt="LexiForge Logo"
-              fill
-              className="object-contain drop-shadow-[0_0_15px_rgba(0,245,255,0.3)]"
-              priority
-            />
-          </motion.div>
-
-          {/* Logo is now the main header, but we keep the title text hidden or subtle if needed, 
-                or just remove it as per "Replace text header with logo.png". 
-                However, keeping the text "LEXIFORGE" below the logo is standard branding. 
-                The prompt says "Substituir o cabeçalho de texto simples pela logo.png". 
-                I interpret this as using the logo AS the main visual anchor, but usually the name is still present.*/}
-          {/* <h1 className="text-4xl md:text-6xl font-cinzel font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-wider">
-            LEXIFORGE
-            </h1> */}
-          {/* Commented out text header to strictly follow "Replace text header" instruction, 
-                assuming the Logo contains the text or it's a pure visual replacement. 
-                If the logo doesn't have text, I might need to keep it. 
-                Let's assume standard visual: Logo image + Tagline. */}
-
-          <p className="text-sm md:text-base text-gray-400 italic font-light tracking-widest uppercase mt-4">
-            "Uma palavra entra, uma saga sai."
-          </p>
+          <Image
+            src="/logo.png"
+            alt="LexiForge Logo"
+            fill
+            className="object-contain"
+            priority
+          />
         </motion.div>
 
-        {/* Input Section */}
+        {/* Input Section - The Glass Bar */}
         <motion.form
           onSubmit={handleForge}
-          className="w-full max-w-md flex flex-col items-center gap-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          className="w-full max-w-lg flex flex-col items-center gap-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
         >
-          <div className="relative w-full group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F5FF] to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+          <div className="relative w-full group flex justify-center">
             <input
               type="text"
               value={inputWord}
               onChange={(e) => setInputWord(e.target.value)}
-              placeholder="Digite a Palavra Primordial..."
-              className="relative w-full bg-[#0B0E14] text-white border border-gray-800 rounded-lg py-4 px-6 focus:outline-none focus:border-[#00F5FF] focus:shadow-[0_0_20px_rgba(0,245,255,0.2)] transition-all duration-300 text-center text-lg font-cinzel placeholder-gray-600 uppercase tracking-widest"
+              placeholder="DIGITE A PALAVRA..."
+              className="
+                        glass-bar-input
+                        relative w-full 
+                        text-white caret-[#00F5FF] 
+                        rounded-full py-5 px-8 
+                        text-center text-xl md:text-2xl font-cinzel tracking-[0.25em] uppercase
+                        placeholder-gray-700 placeholder:normal-case placeholder:tracking-widest placeholder:font-light placeholder:text-sm
+                        focus:outline-none focus:border-[#00F5FF]/50
+                        focus:shadow-[0_10px_40px_-10px_rgba(0,245,255,0.2)]
+                        transition-all duration-500 ease-out
+                    "
               maxLength={30}
               disabled={loading}
             />
@@ -120,12 +123,13 @@ export default function Home() {
           <motion.button
             type="submit"
             disabled={loading || !inputWord.trim()}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.02 }}
             className={`
-                    px-8 py-3 rounded-full font-cinzel font-bold tracking-widest text-sm transition-all duration-300
+                    px-10 py-3 rounded-full font-cinzel font-medium tracking-[0.3em] text-xs transition-all duration-500
                     ${loading || !inputWord.trim()
-                ? 'opacity-50 cursor-not-allowed bg-gray-800 text-gray-500'
-                : 'bg-transparent border border-[#00F5FF] text-[#00F5FF] hover:bg-[#00F5FF] hover:text-[#0B0E14] box-glow-intense'
+                ? 'opacity-30 cursor-not-allowed text-gray-500'
+                : 'bg-transparent border border-[#00F5FF]/30 text-[#00F5FF] hover:border-[#00F5FF] hover:bg-[#00F5FF]/5 hover:shadow-[0_0_20px_rgba(0,245,255,0.15)]'
               }
                 `}
           >
@@ -134,28 +138,27 @@ export default function Home() {
         </motion.form>
 
         {/* Output Section */}
-        <div className="w-full min-h-[300px] flex items-center justify-center">
+        <div className="w-full flex items-center justify-center min-h-[100px]">
           <AnimatePresence mode="wait">
             {loading && (
               <motion.div
                 key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-[#00F5FF] font-cinzel text-xl animate-pulse text-center"
+                initial={{ opacity: 0, filter: "blur(10px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(10px)" }}
+                className="text-[#00F5FF]/80 font-cinzel text-sm animate-pulse text-center mt-4 space-y-3"
               >
-                <p>O Oráculo consulta as estrelas...</p>
-                <p className="text-sm mt-2 text-gray-500 font-sans">Interpretando o significado de "{inputWord}"</p>
+                <p className="tracking-[0.5em] font-light">ORÁCULO DESPERTA</p>
               </motion.div>
             )}
 
             {error && (
               <motion.div
                 key="error"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-red-500 border border-red-900 bg-red-950/20 p-6 rounded-lg text-center font-cinzel"
+                className="text-red-400/80 border border-red-900/30 bg-red-950/5 p-6 rounded-2xl text-center font-cinzel text-sm mt-4 tracking-widest"
               >
                 {error}
               </motion.div>
@@ -164,70 +167,57 @@ export default function Home() {
             {result && !loading && (
               <motion.div
                 key="result"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="w-full bg-[#0F1219] p-8 rounded-xl relative overflow-hidden text-center"
-                style={{
-                  border: '1px solid transparent',
-                  borderImage: 'linear-gradient(to bottom, #374151, #00F5FF) 1'
-                }}
+                initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full glass-panel-zenith rounded-[2rem] p-10 md:p-14 relative overflow-hidden text-center mt-4"
               >
-                {/* Fallback border for browsers not supporting border-image on rounded corners effectively 
-                             (Note: standard border-image kills border-radius. 
-                             Better approach: wrapper or pseudo element. 
-                             For simplicity and reliability, using a wrapper div logic or box-shadow simulation).
-                             Let's try a cleaner CSS approach with pseudo element in globals or just inline style for 'box-shadow' ring.
-                             The prompt asked for "gradient border". 
-                             A clean way is a background gradient buffer. 
-                         */}
-                <div className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-b from-gray-700 to-[#00F5FF] -z-10 pointer-events-none"></div>
-                <div className="absolute inset-[1px] bg-[#0F1219] rounded-xl -z-10"></div>
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F5FF]/20 to-transparent"></div>
 
-
-                <div className="flex flex-col gap-6 relative z-10">
+                <div className="flex flex-col gap-10 relative z-10">
                   <motion.h2
-                    className="text-2xl md:text-3xl font-cinzel font-bold text-[#00F5FF] mb-2 glitch-text"
-                    data-text={result.titulo}
+                    className="text-3xl md:text-5xl font-cinzel font-normal text-white mb-2 tracking-[0.1em] drop-shadow-lg"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.3, duration: 1 }}
                   >
                     {result.titulo}
                   </motion.h2>
 
-                  <div className="text-gray-300 font-crimson leading-relaxed text-lg text-justify md:text-center space-y-4">
-                    <Typewriter text={result.historia} delay={30} />
+                  <div className="text-gray-300 font-playfair leading-[2.2] text-lg md:text-xl text-justify md:text-center space-y-6 px-2 md:px-8">
+                    <Typewriter text={result.historia} delay={20} />
                   </div>
 
                   <motion.div
-                    className="mt-8 pt-6 border-t border-gray-800"
+                    className="pt-10 border-t border-white/5"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 2 }}
+                    transition={{ delay: result.historia.length * 0.02 + 0.5 }}
                   >
-                    <p className="font-cinzel text-sm text-gray-500 uppercase tracking-widest mb-2">A Lenda Diz</p>
-                    <p className="text-xl md:text-2xl text-white italic font-crimson">"{result.frase_de_ouro}"</p>
+                    <p className="font-cinzel text-[10px] text-[#00F5FF]/60 uppercase tracking-[0.4em] mb-6">A Lenda Diz</p>
+                    <p className="text-xl md:text-3xl text-white/90 italic font-playfair tracking-wide leading-relaxed">"{result.frase_de_ouro}"</p>
                   </motion.div>
 
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 3 }}
-                    className="mt-4 flex justify-center"
+                    transition={{ delay: result.historia.length * 0.02 + 1 }}
+                    className=" flex justify-center pt-4"
                   >
                     <button
                       onClick={handleCopy}
-                      className="text-gray-500 hover:text-[#00F5FF] transition-colors text-sm font-cinzel flex items-center gap-2"
+                      className={`
+                                        group relative overflow-hidden rounded-full px-8 py-3 transition-all duration-500
+                                        ${copied ? 'bg-[#00F5FF]/10 text-[#00F5FF]' : 'bg-transparent text-gray-500 hover:text-white'}
+                                    `}
                     >
-                      {copied ? (
-                        <span className="text-green-400">Saga Copiada!</span>
-                      ) : (
-                        <>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                          COPIAR SAGA
-                        </>
-                      )}
+                      <span className="relative z-10 flex items-center gap-3 font-cinzel text-[10px] tracking-[0.3em] font-bold">
+                        {copied ? (
+                          <>SAGA COPIADA</>
+                        ) : (
+                          <>COPIAR LENDA</>
+                        )}
+                      </span>
                     </button>
                   </motion.div>
                 </div>
@@ -237,6 +227,18 @@ export default function Home() {
         </div>
 
       </div>
+
+      {/* Footer / Credits */}
+      <footer className="absolute bottom-6 text-center w-full z-20 opacity-40 hover:opacity-100 transition-opacity duration-500">
+        <a
+          href="https://github.com/ShiroiCrypto"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white font-cinzel text-[10px] tracking-[0.3em]"
+        >
+          DESENVOLVIDO POR MATHEUS GUSTAVO
+        </a>
+      </footer>
     </main>
   );
 }

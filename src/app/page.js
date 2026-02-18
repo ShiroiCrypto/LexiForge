@@ -229,12 +229,12 @@ export default function Home() {
       </div>
 
       {/* Footer / Credits */}
-      <footer className="w-full text-center py-6 z-20 opacity-40 hover:opacity-100 transition-opacity duration-500 mt-auto">
+      <footer className="w-full text-center py-6 z-50 opacity-80 mt-auto">
         <a
           href="https://github.com/ShiroiCrypto"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white font-cinzel text-[10px] tracking-[0.3em]"
+          className="text-white font-cinzel text-[10px] tracking-[0.3em] hover:text-[#00F5FF] transition-colors duration-300"
         >
           DESENVOLVIDO POR MATHEUS GUSTAVO
         </a>

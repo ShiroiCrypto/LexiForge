@@ -15,61 +15,63 @@ export async function POST(req) {
         }
 
         const prompt = `
-      Você é o LexiForge, um antigo mestre da retórica e do storytelling épico. 
-      Sua única tarefa é receber uma palavra e forjar uma narrativa curta, porém poderosa (uma saga). 
-      O tom deve ser solene, místico e inspirador. 
-      
-      A palavra escolhida é: "${word}".
+        VOCÊ É UM ORÁCULO LITERÁRIO. SUA MISSÃO É FORJAR UMA SAGA ÉPICA BASEADA EM UMA ÚNICA PALAVRA.
+        
+        A PALAVRA É: "${word}"
+        
+        REGRAS:
+        1. O Título deve ser misterioso e imponente.
+        2. A História deve ter no máximo 4 parágrafos curtos.
+        3. O tom deve ser solene, antigo e levemente sombrio (Tech-Noir / Cyber-Fantasy).
+        4. A Frase de Ouro deve ser uma citação filosófica impactante.
+        
+        RETORNE APENAS JSON VÁLIDO NO SEGUINTE FORMATO:
+        {
+            "titulo": "...",
+            "historia": "...",
+            "frase_de_ouro": "..."
+        }
+        `;
 
-      Sua saída DEVE ser um JSON estruturado com as chaves: 
-      { 
-        "titulo": "...", 
-        "historia": "...", 
-        "frase_de_ouro": "..." 
-      }. 
-      
-      Use metáforas e vocabulário elevado.
-    `;
-
-        // Using the new SDK (preview style)
-        const result = await ai.models.generateContent({
-            model: modelId,
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-                maxOutputTokens: 65536,
-            }
-        });
-
-        // The new SDK handling might vary, assuming result.text is the content or result.response.text()
-        // Based on user snippet: console.log(response.text);
-        // Let's assume result IS the response object wrapper or has .text
-
-        // Inspecting the SDK typings would be ideal, but based on the snippet `const response = await ai.models.generateContent(...)`, `response.text` gives the text.
-
-        const text = result.text;
-
-        // Parse JSON safely
-        let jsonResponse;
-        try {
-            const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-            jsonResponse = JSON.parse(cleanedText);
-        } catch (e) {
-            console.error("Failed to parse JSON response:", text);
+        // Check if AI client is initialized
+        if (!ai) {
             return NextResponse.json(
-                { error: "Failed to generate a valid response." },
+                { error: "AI Client not initialized. Check GROQ_API_KEY." },
                 { status: 500 }
             );
         }
 
-        return NextResponse.json(jsonResponse);
+        const completion = await ai.chat.completions.create({
+            model: modelId, // "google/gemini-1.5-flash" via gateway
+            messages: [
+                { role: "system", content: "You represent a literary oracle. Output strictly valid JSON." },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7
+        });
+
+        const responseContent = completion.choices[0].message.content;
+
+        let result;
+        try {
+            result = JSON.parse(responseContent);
+        } catch (e) {
+            // Fallback if JSON is wrapped in markdown code fence
+            const jsonMatch = responseContent.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                result = JSON.parse(jsonMatch[0]);
+            } else {
+                console.error("Invalid JSON from AI:", responseContent);
+                throw new Error("Invalid JSON format from AI");
+            }
+        }
+
+        return NextResponse.json(result);
+
     } catch (error) {
-        console.error("Error processing request:", error);
+        console.error("Forge Error:", error);
         return NextResponse.json(
-            { error: "Internal Server Error", details: error.message },
+            { error: "Falha na forja: " + error.message },
             { status: 500 }
         );
     }

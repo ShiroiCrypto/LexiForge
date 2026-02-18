@@ -1,18 +1,22 @@
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from 'openai';
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = process.env.GROQ_API_KEY;
 
-// Lazy initialization to allow build without API key
 let ai;
+
 try {
     if (apiKey) {
-        ai = new GoogleGenAI({ apiKey });
+        ai = new OpenAI({
+            apiKey: apiKey,
+            baseURL: 'https://api.groq.com/openai/v1',
+        });
     } else {
-        console.warn("GEMINI_API_KEY is not defined. AI features will not work.");
+        console.warn("GROQ_API_KEY is not defined. AI features will not work.");
     }
 } catch (error) {
-    console.error("Failed to initialize GoogleGenAI", error);
+    console.error("Failed to initialize Groq client", error);
 }
 
 export { ai };
-export const modelId = "gemini-3-flash-preview";
+// Using Llama 3.3 70B for excellent reasoning and speed
+export const modelId = "llama-3.3-70b-versatile"; 
